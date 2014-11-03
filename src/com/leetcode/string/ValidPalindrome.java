@@ -29,48 +29,48 @@ public class ValidPalindrome {
         
         return testCase;
     }
-}
-
-
-class Solution {
-    public boolean isPalindrome(String s) {
-        int len = s.length();
-            int i = 0;
-            int j = len - 1;
-            char ci, cj;
-            boolean isValid = true;
-            while (i < j) {
-                do {
-                    ci = s.charAt(i);
-                    i++;
-                    if ((ci = validateCharacter(ci)) != ' ') {
-                        break;
-                    }
-                } while (i < len);
-                do {
-                    cj = s.charAt(j);
-                    j--;
-                    if ((cj = validateCharacter(cj)) != ' ') {
-                        break;
-                    }
-                } while (j >= 0);
-                
-                if ((i - 1) < (j + 1) && ci != cj) {
-                    isValid = false;
-                    break;
-                }
-            }
-            
-            return isValid;
-    }
     
-    private char validateCharacter(char c) {
-        if (c >= 'A' && c <= 'Z') {
-            c = (char) (c - 'A' + 'a');
-        } else if ((c < 'a' || c > 'z') && (c < '0' || c > '9')) {
-            c = ' ';
+    private static class Solution {
+        public boolean isPalindrome(String s) {
+            int len = s.length();
+                int i = 0;
+                int j = len - 1;
+                char ci, cj;
+                boolean isValid = true;
+                while (i < j) {
+                    do {
+                        ci = s.charAt(i);
+                        i++;
+                        if ((ci = validateCharacter(ci)) != ' ') {
+                            break;
+                        }
+                    } while (i < len);
+                    do {
+                        cj = s.charAt(j);
+                        j--;
+                        if ((cj = validateCharacter(cj)) != ' ') {
+                            break;
+                        }
+                    } while (j >= 0);
+                    
+                    if ((i - 1) < (j + 1) && ci != cj) {
+                        isValid = false;
+                        break;
+                    }
+                }
+                
+                return isValid;
         }
         
-        return c;
+        private char validateCharacter(char c) {
+            if (c >= 'A' && c <= 'Z') {
+                c = (char) (c - 'A' + 'a');
+            } else if ((c < 'a' || c > 'z') && (c < '0' || c > '9')) {
+                c = ' ';
+            }
+            
+            return c;
+        }
     }
 }
+
