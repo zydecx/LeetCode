@@ -2,9 +2,11 @@ package com.leetcode.breadthfirstsearch;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
@@ -63,7 +65,14 @@ public static List getTestCase() {
 }
 
     private static class Solution {
-        public int ladderLength(String start, String end, Set<String> dict) {
+        /**
+         * First solution come up to mind: construct graph and traversal sequence using BFS.
+         * @param start
+         * @param end
+         * @param dict
+         * @return
+         */
+        public int ladderLength2(String start, String end, Set<String> dict) {
             int length = start.length();
             int size = dict.size();
             if (this.isAdjacent(start, end, length)) return 2;
@@ -147,6 +156,49 @@ public static List getTestCase() {
             }
             
             
+        }
+        
+        /**
+         * Best solution so far: TRY my way from start to end.
+         * @param start
+         * @param end
+         * @param dict
+         * @return
+         */
+        public int ladderLength(String start, String end, Set<String> dict) {
+            if (start == null || end == null || start.length() != end.length()) 
+                return 0;
+            
+            int length = start.length();
+            if (this.isAdjacent(start, end, length))    return 2;
+            
+            Queue<String> queue = new LinkedList<>();
+            Map<String, Integer> availPath = new HashMap<String, Integer>();
+            availPath.put(start, 1);
+            queue.offer(start);
+            
+            String s;
+            while ((s = queue.poll()) != null) {
+                if (s.equals(end))  return availPath.get(s);
+                
+                StringBuilder sb =  new StringBuilder(s);
+                for (int i = 0; i < length; i++) {
+                    char c = s.charAt(i);
+                    for (char j = 'a'; j <= 'z'; j++) {
+                        if (c == j) continue;
+                        sb.setCharAt(i, j);
+                        String newS = sb.toString();
+                        
+                        if (dict.contains(newS) && !availPath.containsKey(newS)) {
+                            availPath.put(newS, availPath.get(s) + 1);
+                            queue.offer(newS);
+                        }
+                    }
+                    sb.setCharAt(i, c);
+                }
+            }
+            
+            return 0;
         }
         
         private boolean isAdjacent(String a, String b, int length) {
