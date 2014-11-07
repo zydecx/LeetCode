@@ -491,114 +491,114 @@ return its length <code>5</code>.
         </div>
       </div> 
     </div>
-    <input value="public class Solution {
-     public int ladderLength(String start, String end, Set&lt;String&gt; dict) {
-            int length = start.length();
-            if (this.isAdjacent(start, end, length)) return 2;
-            
-            Node nodeStart = new Node(start);
-            Node nodeEnd = new Node(end);
-            nodeStart.depth = 1;
-            Set&lt;Node&gt; nodes = new LinkedHashSet&lt;&gt;();
-            
-            for (String s : dict) {
-                nodes.add(new Node(s));
-            }
-
-            for (Node n : nodes) {
-                if (this.isAdjacent(start, n.value, length)) {
-                    nodeStart.nexts.add(n);
-                }
-                if (this.isAdjacent(end, n.value, length)) { 
-                    n.nexts.add(nodeEnd);
-                    nodeEnd.nexts.add(n);
-                }
-            }
-            
-            if (!nodeStart.hasNext() || !nodeEnd.hasNext()) return 0;
-            
-            for (Node n1 : nodes) {
-                for (Node n2 : nodes) {
-                    if (n1.value.equals(n2.value)) continue;
-                    
-                    if (this.isAdjacent(n1.value, n2.value, length)) {
-                        n1.nexts.add(n2);
-                        n2.nexts.add(n1);
-                    }
-                }
-            }
-            
-            Queue&lt;Node&gt; queue = new LinkedList&lt;&gt;();
-            queue.offer(nodeStart);
-            Node node;
-            while ((node = queue.poll()) != null) {
-                if (node.isVisited) continue;
-                if (node.equals(nodeEnd)) break;
-                
-                node.isVisited = true;
-                for (Node n : node.nexts) {
-                    if (n.depth == 0) {
-                        n.depth = node.depth + 1;
-                        queue.offer(n);
-                    }
-                }
-            }
-
-            /*System.out.printf(&quot;-&gt;%s: %d, %b\n&quot;, nodeStart.value, nodeStart.depth, nodeStart.isVisited);
-            System.out.printf(&quot;-&gt;%s: %d, %b\n&quot;, nodeEnd.value, nodeEnd.depth, nodeEnd.isVisited);
-            for (Node n : nodes) {
-                System.out.printf(&quot;-&gt;%s: %d, %b\n&quot;, n.value, n.depth, n.isVisited);
-            }*/
-              
-            return nodeEnd.depth;
-        }
-        
-        private class Node {
-            String value;
-            Set&lt;Node&gt; nexts;
-            boolean isVisited;
-            int depth;
-            
-            Node(String value) {
-                this.value = value;
-                nexts = new LinkedHashSet&lt;&gt;();
-                isVisited = false;
-                depth = 0;
-            }
-            
-            boolean hasNext() {
-                return nexts.size() &gt; 0;
-            }
-            
-            public boolean equals(Node n) {
-                return this.value.equals(n.value);
-            }
-            
-            public int hashCode() {
-                return this.value.hashCode();
-            }
-            
-            
-        }
-        
-        private boolean isAdjacent(String a, String b, int length) {
-            int count = 0,
-                    i = 0;
-            char[] charA = a.toCharArray();
-            char[] charB = b.toCharArray();
-            while (count &lt;= 1 &amp;&amp; i &lt; length) {
-                if (charA[i] != charB[i]) {
-                    count++;
-                }
-                i++;
-            }
-            
-            if (count == 1) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+    <input value="public class Solution {
+     public int ladderLength(String start, String end, Set&lt;String&gt; dict) {
+            int length = start.length();
+            if (this.isAdjacent(start, end, length)) return 2;
+            
+            Node nodeStart = new Node(start);
+            Node nodeEnd = new Node(end);
+            nodeStart.depth = 1;
+            Set&lt;Node&gt; nodes = new LinkedHashSet&lt;&gt;();
+            
+            for (String s : dict) {
+                nodes.add(new Node(s));
+            }
+
+            for (Node n : nodes) {
+                if (this.isAdjacent(start, n.value, length)) {
+                    nodeStart.nexts.add(n);
+                }
+                if (this.isAdjacent(end, n.value, length)) { 
+                    n.nexts.add(nodeEnd);
+                    nodeEnd.nexts.add(n);
+                }
+            }
+            
+            if (!nodeStart.hasNext() || !nodeEnd.hasNext()) return 0;
+            
+            for (Node n1 : nodes) {
+                for (Node n2 : nodes) {
+                    if (n1.value.equals(n2.value)) continue;
+                    
+                    if (this.isAdjacent(n1.value, n2.value, length)) {
+                        n1.nexts.add(n2);
+                        n2.nexts.add(n1);
+                    }
+                }
+            }
+            
+            Queue&lt;Node&gt; queue = new LinkedList&lt;&gt;();
+            queue.offer(nodeStart);
+            Node node;
+            while ((node = queue.poll()) != null) {
+                if (node.isVisited) continue;
+                if (node.equals(nodeEnd)) break;
+                
+                node.isVisited = true;
+                for (Node n : node.nexts) {
+                    if (n.depth == 0) {
+                        n.depth = node.depth + 1;
+                        queue.offer(n);
+                    }
+                }
+            }
+
+            /*System.out.printf(&quot;-&gt;%s: %d, %b\n&quot;, nodeStart.value, nodeStart.depth, nodeStart.isVisited);
+            System.out.printf(&quot;-&gt;%s: %d, %b\n&quot;, nodeEnd.value, nodeEnd.depth, nodeEnd.isVisited);
+            for (Node n : nodes) {
+                System.out.printf(&quot;-&gt;%s: %d, %b\n&quot;, n.value, n.depth, n.isVisited);
+            }*/
+              
+            return nodeEnd.depth;
+        }
+        
+        private class Node {
+            String value;
+            Set&lt;Node&gt; nexts;
+            boolean isVisited;
+            int depth;
+            
+            Node(String value) {
+                this.value = value;
+                nexts = new LinkedHashSet&lt;&gt;();
+                isVisited = false;
+                depth = 0;
+            }
+            
+            boolean hasNext() {
+                return nexts.size() &gt; 0;
+            }
+            
+            public boolean equals(Node n) {
+                return this.value.equals(n.value);
+            }
+            
+            public int hashCode() {
+                return this.value.hashCode();
+            }
+            
+            
+        }
+        
+        private boolean isAdjacent(String a, String b, int length) {
+            int count = 0,
+                    i = 0;
+            char[] charA = a.toCharArray();
+            char[] charB = b.toCharArray();
+            while (count &lt;= 1 &amp;&amp; i &lt; length) {
+                if (charA[i] != charB[i]) {
+                    count++;
+                }
+                i++;
+            }
+            
+            if (count == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 }" name="typed_code" type="hidden">
     <div class="action">
       
