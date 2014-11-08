@@ -1,0 +1,696 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+    <script src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/ga.js" async="" type="text/javascript"></script><script id="allmobilize" charset="utf-8" src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/allmobilize.js"></script><style type="text/css"></style>
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="#">
+
+    <title>leetcode之word ladder - 姚光超的专栏
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="对于之前没有接触过该类型题目的人来说，此题无疑是个难题，本人提交了10次才正确通过，期间遇到了非常多的问题，感觉几乎把OJ的所有错误遍历了一遍，下面详细说说自己做该题的经验。首先承认，我一开始并没有想到什么图模型，或者说是一点思路都没有。然后我就冥思苦想，首先想到了可以先构造一个二维矩阵，判断给定的词之间是否能两两一步到达，这一步可以通过两层循环加字符串的遍历完成，应该不难。获得这">
+    <script src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/ad.js"></script>
+        <!--new top-->
+       
+        <link rel="stylesheet" href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/index.css">
+        <!--new top-->
+
+    <link rel="Stylesheet" type="text/css" href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/style_002.css">
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/yutianzuijin/rss/list">
+    <link rel="shortcut icon" href="http://csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/nobg.css">
+ 
+
+
+<script src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/share.js"></script><script src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/tracking.js" charset="utf-8" type="text/javascript"></script><script src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/main.js" charset="utf-8" type="text/javascript"></script><link type="text/css" rel="stylesheet" href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/bdsstyle.css"><script src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/sm.js" async="" charset="utf-8"></script><link rel="stylesheet" type="text/css" href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/style.css"><link href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/style_003.css" rel="stylesheet" type="text/css"><script src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/logger.js"></script><link href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/share_style0_16.css" rel="stylesheet"><style class="firebugResetStyles" type="text/css" charset="utf-8">/* See license.txt for terms of usage */
+/** reset styling **/
+.firebugResetStyles {
+    z-index: 2147483646 !important;
+    top: 0 !important;
+    left: 0 !important;
+    display: block !important;
+    border: 0 none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    outline: 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    position: fixed !important;
+    transform: rotate(0deg) !important;
+    transform-origin: 50% 50% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent none !important;
+    pointer-events: none !important;
+    white-space: normal !important;
+}
+style.firebugResetStyles {
+    display: none !important;
+}
+
+.firebugBlockBackgroundColor {
+    background-color: transparent !important;
+}
+
+.firebugResetStyles:before, .firebugResetStyles:after {
+    content: "" !important;
+}
+/**actual styling to be modified by firebug theme**/
+.firebugCanvas {
+    display: none !important;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+.firebugLayoutBox {
+    width: auto !important;
+    position: static !important;
+}
+
+.firebugLayoutBoxOffset {
+    opacity: 0.8 !important;
+    position: fixed !important;
+}
+
+.firebugLayoutLine {
+    opacity: 0.4 !important;
+    background-color: #000000 !important;
+}
+
+.firebugLayoutLineLeft, .firebugLayoutLineRight {
+    width: 1px !important;
+    height: 100% !important;
+}
+
+.firebugLayoutLineTop, .firebugLayoutLineBottom {
+    width: 100% !important;
+    height: 1px !important;
+}
+
+.firebugLayoutLineTop {
+    margin-top: -1px !important;
+    border-top: 1px solid #999999 !important;
+}
+
+.firebugLayoutLineRight {
+    border-right: 1px solid #999999 !important;
+}
+
+.firebugLayoutLineBottom {
+    border-bottom: 1px solid #999999 !important;
+}
+
+.firebugLayoutLineLeft {
+    margin-left: -1px !important;
+    border-left: 1px solid #999999 !important;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+.firebugLayoutBoxParent {
+    border-top: 0 none !important;
+    border-right: 1px dashed #E00 !important;
+    border-bottom: 1px dashed #E00 !important;
+    border-left: 0 none !important;
+    position: fixed !important;
+    width: auto !important;
+}
+
+.firebugRuler{
+    position: absolute !important;
+}
+
+.firebugRulerH {
+    top: -15px !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 14px !important;
+    background: url("data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%13%88%00%00%00%0E%08%02%00%00%00L%25a%0A%00%00%00%04gAMA%00%00%D6%D8%D4OX2%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%04%F8IDATx%DA%EC%DD%D1n%E2%3A%00E%D1%80%F8%FF%EF%E2%AF2%95%D0D4%0E%C1%14%B0%8Fa-%E9%3E%CC%9C%87n%B9%81%A6W0%1C%A6i%9A%E7y%0As8%1CT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AATE9%FE%FCw%3E%9F%AF%2B%2F%BA%97%FDT%1D~K(%5C%9D%D5%EA%1B%5C%86%B5%A9%BDU%B5y%80%ED%AB*%03%FAV9%AB%E1%CEj%E7%82%EF%FB%18%BC%AEJ8%AB%FA'%D2%BEU9%D7U%ECc0%E1%A2r%5DynwVi%CFW%7F%BB%17%7Dy%EACU%CD%0E%F0%FA%3BX%FEbV%FEM%9B%2B%AD%BE%AA%E5%95v%AB%AA%E3E5%DCu%15rV9%07%B5%7F%B5w%FCm%BA%BE%AA%FBY%3D%14%F0%EE%C7%60%0EU%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5JU%88%D3%F5%1F%AE%DF%3B%1B%F2%3E%DAUCNa%F92%D02%AC%7Dm%F9%3A%D4%F2%8B6%AE*%BF%5C%C2Ym~9g5%D0Y%95%17%7C%C8c%B0%7C%18%26%9CU%CD%13i%F7%AA%90%B3Z%7D%95%B4%C7%60%E6E%B5%BC%05%B4%FBY%95U%9E%DB%FD%1C%FC%E0%9F%83%7F%BE%17%7DkjMU%E3%03%AC%7CWj%DF%83%9An%BCG%AE%F1%95%96yQ%0Dq%5Dy%00%3Et%B5'%FC6%5DS%95pV%95%01%81%FF'%07%00%00%00%00%00%00%00%00%00%F8x%C7%F0%BE%9COp%5D%C9%7C%AD%E7%E6%EBV%FB%1E%E0(%07%E5%AC%C6%3A%ABi%9C%8F%C6%0E9%AB%C0'%D2%8E%9F%F99%D0E%B5%99%14%F5%0D%CD%7F%24%C6%DEH%B8%E9rV%DFs%DB%D0%F7%00k%FE%1D%84%84%83J%B8%E3%BA%FB%EF%20%84%1C%D7%AD%B0%8E%D7U%C8Y%05%1E%D4t%EF%AD%95Q%BF8w%BF%E9%0A%BF%EB%03%00%00%00%00%00%00%00%00%00%B8vJ%8E%BB%F5%B1u%8Cx%80%E1o%5E%CA9%AB%CB%CB%8E%03%DF%1D%B7T%25%9C%D5(%EFJM8%AB%CC'%D2%B2*%A4s%E7c6%FB%3E%FA%A2%1E%80~%0E%3E%DA%10x%5D%95Uig%15u%15%ED%7C%14%B6%87%A1%3B%FCo8%A8%D8o%D3%ADO%01%EDx%83%1A~%1B%9FpP%A3%DC%C6'%9C%95gK%00%00%00%00%00%00%00%00%00%20%D9%C9%11%D0%C0%40%AF%3F%EE%EE%92%94%D6%16X%B5%BCMH%15%2F%BF%D4%A7%C87%F1%8E%F2%81%AE%AAvzr%DA2%ABV%17%7C%E63%83%E7I%DC%C6%0Bs%1B%EF6%1E%00%00%00%00%00%00%00%00%00%80cr%9CW%FF%7F%C6%01%0E%F1%CE%A5%84%B3%CA%BC%E0%CB%AA%84%CE%F9%BF)%EC%13%08WU%AE%AB%B1%AE%2BO%EC%8E%CBYe%FE%8CN%ABr%5Dy%60~%CFA%0D%F4%AE%D4%BE%C75%CA%EDVB%EA(%B7%F1%09g%E5%D9%12%00%00%00%00%00%00%00%00%00H%F6%EB%13S%E7y%5E%5E%FB%98%F0%22%D1%B2'%A7%F0%92%B1%BC%24z3%AC%7Dm%60%D5%92%B4%7CEUO%5E%F0%AA*%3BU%B9%AE%3E%A0j%94%07%A0%C7%A0%AB%FD%B5%3F%A0%F7%03T%3Dy%D7%F7%D6%D4%C0%AAU%D2%E6%DFt%3F%A8%CC%AA%F2%86%B9%D7%F5%1F%18%E6%01%F8%CC%D5%9E%F0%F3z%88%AA%90%EF%20%00%00%00%00%00%00%00%00%00%C0%A6%D3%EA%CFi%AFb%2C%7BB%0A%2B%C3%1A%D7%06V%D5%07%A8r%5D%3D%D9%A6%CAu%F5%25%CF%A2%99%97zNX%60%95%AB%5DUZ%D5%FBR%03%AB%1C%D4k%9F%3F%BB%5C%FF%81a%AE%AB'%7F%F3%EA%FE%F3z%94%AA%D8%DF%5B%01%00%00%00%00%00%00%00%00%00%8E%FB%F3%F2%B1%1B%8DWU%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*UiU%C7%BBe%E7%F3%B9%CB%AAJ%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5J%95*U%AAT%A9R%A5*%AAj%FD%C6%D4%5Eo%90%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5%86%AF%1B%9F%98%DA%EBm%BBV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%ADV%AB%D5j%B5Z%AD%D6%E4%F58%01%00%00%00%00%00%00%00%00%00%00%00%00%00%40%85%7F%02%0C%008%C2%D0H%16j%8FX%00%00%00%00IEND%AEB%60%82") repeat-x !important;
+    border-top: 1px solid #BBBBBB !important;
+    border-right: 1px dashed #BBBBBB !important;
+    border-bottom: 1px solid #000000 !important;
+}
+
+.firebugRulerV {
+    top: 0 !important;
+    left: -15px !important;
+    width: 14px !important;
+    height: 100% !important;
+    background: url("data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%0E%00%00%13%88%08%02%00%00%00%0E%F5%CB%10%00%00%00%04gAMA%00%00%D6%D8%D4OX2%00%00%00%19tEXtSoftware%00Adobe%20ImageReadyq%C9e%3C%00%00%06~IDATx%DA%EC%DD%D1v%A20%14%40Qt%F1%FF%FF%E4%97%D9%07%3BT%19%92%DC%40(%90%EEy%9A5%CB%B6%E8%F6%9Ac%A4%CC0%84%FF%DC%9E%CF%E7%E3%F1%88%DE4%F8%5D%C7%9F%2F%BA%DD%5E%7FI%7D%F18%DDn%BA%C5%FB%DF%97%BFk%F2%10%FF%FD%B4%F2M%A7%FB%FD%FD%B3%22%07p%8F%3F%AE%E3%F4S%8A%8F%40%EEq%9D%BE8D%F0%0EY%A1Uq%B7%EA%1F%81%88V%E8X%3F%B4%CEy%B7h%D1%A2E%EBohU%FC%D9%AF2fO%8BBeD%BE%F7X%0C%97%A4%D6b7%2Ck%A5%12%E3%9B%60v%B7r%C7%1AI%8C%BD%2B%23r%00c0%B2v%9B%AD%CA%26%0C%1Ek%05A%FD%93%D0%2B%A1u%8B%16-%95q%5Ce%DCSO%8E%E4M%23%8B%F7%C2%FE%40%BB%BD%8C%FC%8A%B5V%EBu%40%F9%3B%A72%FA%AE%8C%D4%01%CC%B5%DA%13%9CB%AB%E2I%18%24%B0n%A9%0CZ*Ce%9C%A22%8E%D8NJ%1E%EB%FF%8F%AE%CAP%19*%C3%BAEKe%AC%D1%AAX%8C*%DEH%8F%C5W%A1e%AD%D4%B7%5C%5B%19%C5%DB%0D%EF%9F%19%1D%7B%5E%86%BD%0C%95%A12%AC%5B*%83%96%CAP%19%F62T%86%CAP%19*%83%96%CA%B8Xe%BC%FE)T%19%A1%17xg%7F%DA%CBP%19*%C3%BA%A52T%86%CAP%19%F62T%86%CA%B0n%A9%0CZ%1DV%C6%3D%F3%FCH%DE%B4%B8~%7F%5CZc%F1%D6%1F%AF%84%F9%0F6%E6%EBVt9%0E~%BEr%AF%23%B0%97%A12T%86%CAP%19%B4T%86%CA%B8Re%D8%CBP%19*%C3%BA%A52huX%19%AE%CA%E5%BC%0C%7B%19*CeX%B7h%A9%0C%95%E1%BC%0C%7B%19*CeX%B7T%06%AD%CB%5E%95%2B%BF.%8F%C5%97%D5%E4%7B%EE%82%D6%FB%CF-%9C%FD%B9%CF%3By%7B%19%F62T%86%CA%B0n%D1R%19*%A3%D3%CA%B0%97%A12T%86uKe%D0%EA%B02*%3F1%99%5DB%2B%A4%B5%F8%3A%7C%BA%2B%8Co%7D%5C%EDe%A8%0C%95a%DDR%19%B4T%C66%82fA%B2%ED%DA%9FC%FC%17GZ%06%C9%E1%B3%E5%2C%1A%9FoiB%EB%96%CA%A0%D5qe4%7B%7D%FD%85%F7%5B%ED_%E0s%07%F0k%951%ECr%0D%B5C%D7-g%D1%A8%0C%EB%96%CA%A0%A52T%C6)*%C3%5E%86%CAP%19%D6-%95A%EB*%95q%F8%BB%E3%F9%AB%F6%E21%ACZ%B7%22%B7%9B%3F%02%85%CB%A2%5B%B7%BA%5E%B7%9C%97%E1%BC%0C%EB%16-%95%A12z%AC%0C%BFc%A22T%86uKe%D0%EA%B02V%DD%AD%8A%2B%8CWhe%5E%AF%CF%F5%3B%26%CE%CBh%5C%19%CE%CB%B0%F3%A4%095%A1%CAP%19*Ce%A8%0C%3BO*Ce%A8%0C%95%A12%3A%AD%8C%0A%82%7B%F0v%1F%2FD%A9%5B%9F%EE%EA%26%AF%03%CA%DF9%7B%19*Ce%A8%0C%95%A12T%86%CA%B8Ze%D8%CBP%19*Ce%A8%0C%95%D1ae%EC%F7%89I%E1%B4%D7M%D7P%8BjU%5C%BB%3E%F2%20%D8%CBP%19*Ce%A8%0C%95%A12T%C6%D5*%C3%5E%86%CAP%19*Ce%B4O%07%7B%F0W%7Bw%1C%7C%1A%8C%B3%3B%D1%EE%AA%5C%D6-%EBV%83%80%5E%D0%CA%10%5CU%2BD%E07YU%86%CAP%19*%E3%9A%95%91%D9%A0%C8%AD%5B%EDv%9E%82%FFKOee%E4%8FUe%A8%0C%95%A12T%C6%1F%A9%8C%C8%3D%5B%A5%15%FD%14%22r%E7B%9F%17l%F8%BF%ED%EAf%2B%7F%CF%ECe%D8%CBP%19*Ce%A8%0C%95%E1%93~%7B%19%F62T%86%CAP%19*Ce%A8%0C%E7%13%DA%CBP%19*Ce%A8%0CZf%8B%16-Z%B4h%D1R%19f%8B%16-Z%B4h%D1R%19%B4%CC%16-Z%B4h%D1R%19%B4%CC%16-Z%B4h%D1%A2%A52%CC%16-Z%B4h%D1%A2%A52h%99-Z%B4h%D1%A2%A52h%99-Z%B4h%D1%A2EKe%98-Z%B4h%D1%A2EKe%D02%5B%B4h%D1%A2EKe%D02%5B%B4h%D1%A2E%8B%96%CA0%5B%B4h%D1%A2E%8B%96%CA%A0e%B6h%D1%A2E%8B%96%CA%A0e%B6h%D1%A2E%8B%16-%95a%B6h%D1%A2E%8B%16-%95A%CBl%D1%A2E%8B%16-%95A%CBl%D1%A2E%8B%16-Z*%C3l%D1%A2E%8B%16-Z*%83%96%D9%A2E%8B%16-Z*%83%96%D9%A2E%8B%16-Z%B4T%86%D9%A2E%8B%16-Z%B4T%06-%B3E%8B%16-Z%B4T%06-%B3E%8B%16-Z%B4h%A9%0C%B3E%8B%16-Z%B4h%A9%0CZf%8B%16-Z%B4h%A9%0CZf%8B%16-Z%B4h%D1R%19f%8B%16-Z%B4h%D1R%19%B4%CC%16-Z%B4h%D1R%19%B4%CC%16-Z%B4h%D1%A2%A52%CC%16-Z%B4h%D1%A2%A52h%99-Z%B4h%D1%A2%A52h%99-Z%B4h%D1%A2EKe%98-Z%B4h%D1%A2EKe%D02%5B%B4h%D1%A2EKe%D02%5B%B4h%D1%A2E%8B%96%CA0%5B%B4h%D1%A2E%8B%96%CA%A0e%B6h%D1%A2E%8B%96%CA%A0e%B6h%D1%A2E%8B%16-%95a%B6h%D1%A2E%8B%16-%95A%CBl%D1%A2E%8B%16-%95A%CBl%D1%A2E%8B%16-Z*%C3l%D1%A2E%8B%16-Z*%83%96%D9%A2E%8B%16-Z*%83%96%D9%A2E%8B%16-Z%B4T%86%D9%A2E%8B%16-Z%B4T%06-%B3E%8B%16-Z%B4T%06-%B3E%8B%16-Z%B4h%A9%0C%B3E%8B%16-Z%B4h%A9%0CZf%8B%16-Z%B4h%A9%0CZf%8B%16-Z%B4h%D1R%19f%8B%16-Z%B4h%D1R%19%B4%CC%16-Z%B4h%D1R%19%B4%CC%16-Z%B4h%D1%A2%A52%CC%16-Z%B4h%D1%A2%A52h%99-Z%B4h%D1%A2%A52h%99-Z%B4h%D1%A2EKe%98-Z%B4h%D1%A2EKe%D02%5B%B4h%D1%A2EKe%D02%5B%B4h%D1%A2E%8B%96%CA0%5B%B4h%D1%A2E%8B%96%CA%A0e%B6h%D1%A2E%8B%96%CA%A0e%B6h%D1%A2E%8B%16-%95a%B6h%D1%A2E%8B%16-%95A%CBl%D1%A2E%8B%16-%95A%CBl%D1%A2E%8B%16-Z*%C3l%D1%A2E%8B%16-Z*%83%96%D9%A2E%8B%16-Z*%83%96%D9%A2E%8B%16-Z%B4T%86%D9%A2E%8B%16-Z%B4T%06-%B3E%8B%16-Z%B4%AE%A4%F5%25%C0%00%DE%BF%5C'%0F%DA%B8q%00%00%00%00IEND%AEB%60%82") repeat-y !important;
+    border-left: 1px solid #BBBBBB !important;
+    border-right: 1px solid #000000 !important;
+    border-bottom: 1px dashed #BBBBBB !important;
+}
+
+.overflowRulerX > .firebugRulerV {
+    left: 0 !important;
+}
+
+.overflowRulerY > .firebugRulerH {
+    top: 0 !important;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+.fbProxyElement {
+    position: fixed !important;
+    pointer-events: auto !important;
+}
+</style></head>
+<body><iframe style="display: none;" frameborder="0"></iframe>
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/html.js" type="text/javascript"></script><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" target="_blank" class="img blog-icon"></a></div>          <div class="pull-right login-wrap unlogin">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="https://passport.csdn.net/account/register?ref=toolbar">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" method="get" target="_blank">                      <input value="toolbar" name="ref" accesskey="2" type="hidden">                      <div class="border">                        <input placeholder="搜索" name="q" accesskey="2" type="text"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label">标题</label>                          <div class="col-sm-10">                            <input value="leetcode之word ladder - 姚光超的专栏 - 博客频道 - CSDN.NET" id="inputTitle" placeholder="" class="title form-control" type="text">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input value="http://blog.csdn.net/yutianzuijin/article/details/12887747" id="input-url" placeholder="" class="url form-control" type="text">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" class="form-control tag" type="text">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">摘要</label>                        <div class="col-sm-10">                          <textarea id="input-description" class="form-control description"></textarea>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left">                            <div class="checkbox">                              <label>                                <input name="share" checked="checked" class="share" type="checkbox">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="display:none" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note">                      <div class="box"></div>                    <iframe src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/a.htm" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent" frameborder="0"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt><a href="http://share.csdn.net/slides/new?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/100x100.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/100x100.jpg"></a></dt>                        <dd class="info"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname"></a><a class="set-nick" href="https://passport.csdn.net/account/profile">设置昵称<span class="write-icon"></span></a><span class="dec"><a class="fill-dec" href="http://my.csdn.net/" target="_blank">编辑自我介绍，让更多人了解你<span class="write-icon"></span></a></span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-right "><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd><a href="http://share.csdn.net/?ref=toolbar" target="_blank">Share</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+     <!--new top-->
+    <div id="container">
+        
+
+
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+<a href="http://bbs.csdn.net/topics/390812950?page=5" target="_blank">
+<font color="blue">博客专家福利
+</font></a>
+&nbsp;&nbsp;&nbsp;
+
+<a target="_blank" href="http://blog.csdn.net/csdnproduct/article/details/40896243">
+<font color="red">公告：CSDN论坛停站维护公告</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a target="_blank" href="http://bbs.csdn.net/topics/390921628">
+<font color="blue">Qualcomm博客征文活动
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a target="_blank" href="http://blog.csdn.net/blogdevteam/article/details/39894901">
+<font color="red">参与话题讨论，好礼等你拿
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a target="_blank" href="http://blog.csdn.net/csdnproduct/article/details/40822727">
+<font color="blue">公告：博客新皮肤上线啦
+</font></a>
+
+
+</div>                        </div>
+                        
+
+  
+<link href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/comment1.css" type="text/css" rel="stylesheet">
+<link href="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/style1.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" type="text/javascript" src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/jquery_002.js"></script>
+<script type="text/javascript" src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/main_002.js"></script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/yutianzuijin/article/details/12887747">
+        leetcode之word ladder
+        </a></span>
+    </h1>
+</div>
+
+    <div class="article_manage">
+        <span class="link_categories">
+        分类：
+            <a href="http://blog.csdn.net/yutianzuijin/article/category/1628275" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">leetcode</a> 
+        </span>
+    <span class="link_postdate">2013-10-20 19:30</span>
+    <span class="link_view" title="阅读次数">3406人阅读</span>
+    <span class="link_comments" title="评论次数"><a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(1)</span>
+    <span class="link_collect"><a href="javascript:void(0);" onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shoucang']);collectArticle('leetcode之word ladder','12887747');return false;" title="收藏">收藏</a></span>
+    <span class="link_report"><a href="#report" onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_jubao']);report(12887747,2);return false;" title="举报">举报</a></span>
+    
+</div>
+<div class="tag2box"><a href="http://www.csdn.net/tag/leetcode" target="_blank" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">leetcode</a></div>
+
+  
+    
+<div id="article_content" class="article_content">
+
+<p>对于之前没有接触过该类型题目的人来说，此题无疑是个难题，本人提交了<span style="font-family:Times New Roman">10</span><span style="font-family:宋体">次才正确通过，期间遇到了非常多的问题，感觉几乎把</span><span style="font-family:Times New Roman">OJ</span><span style="font-family:宋体">的所有错误遍历了一遍，下面详细说说自己做该题的经验。</span></p>
+<p><span style="font-family:宋体"><img src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/20131020192844984.png" alt=""><br>
+</span></p>
+<p><span style="font-family:宋体"></span></p>
+<p>首先承认，我一开始并没有想到什么图模型，或者说是一点思路都没有。然后我就冥思苦想，首先想到了可以先构造一个二维矩阵，判断给定的词之间是否能
+两两一步到达，这一步可以通过两层循环加字符串的遍历完成，应该不难。获得这个矩阵之后，我居然还是没有想到图，只是在纸上写写画画感觉问题可以转化成在
+矩阵中搜索一条路径可以到达最后一行。路径搜索应该可以通过深搜完成，之后就开始按照这个思路写代码，结果越写越乱，遇到多次<span style="font-family:Times New Roman">MLE</span><span style="font-family:宋体">。</span></p>
+<p>多次尝试无果后，我感觉之前的思路不对，需要重整思路。然后又是写写画画，突然灵光一闪：搜索路径貌似可以用图表示！然后按照这个思路很快就想明白了整个流程：首先构造一个无向图用来表示单词之间的可达性，然后从表示起点的节点开始对整个图进行BFS<span style="font-family:宋体">遍历，直到找到表示</span><span style="font-family:Times New Roman">end</span><span style="font-family:宋体">的节点。按照这个思路也很快写出代码，但是提交后又遇到新问题：不停地超时。此时说明算法已经正确，但是复杂度还是太高。不妨先看一下这时的代码：</span></p>
+<div class="dp-highlighter bg_java"><div class="bar"><div class="tools"><b>[java]</b> <a href="#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command('ViewSource',this);return false;">view plain</a><a href="#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command('CopyToClipboard',this);return false;">copy</a><a href="#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command('PrintSource',this);return false;">print</a><a href="#" class="About" title="?" onclick="dp.sh.Toolbar.Command('About',this);return false;">?</a><div style="position: absolute; left: 420px; top: 1117px; width: 24px; height: 13px; z-index: 99;"><embed id="ZeroClipboardMovie_1" src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" name="ZeroClipboardMovie_1" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=24&amp;height=13" wmode="transparent" height="13" width="24" align="middle"></div></div></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;ladderLength2(String&nbsp;start,&nbsp;String&nbsp;end,&nbsp;HashSet&lt;String&gt;&nbsp;dict)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(start&nbsp;==&nbsp;</span><span class="keyword">null</span><span>&nbsp;||&nbsp;end&nbsp;==&nbsp;</span><span class="keyword">null</span><span>&nbsp;||&nbsp;start.equals(end)&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;start.length()&nbsp;!=&nbsp;end.length())&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(isOneWordDiff(start,&nbsp;end))&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">2</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dict.add(start);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dict.add(end);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String[]&nbsp;dicts&nbsp;=&nbsp;(String[])&nbsp;dict.toArray(<span class="keyword">new</span><span>&nbsp;String[</span><span class="number">0</span><span>]);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;size&nbsp;=&nbsp;dicts.length;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>　　<span class="comment">//&nbsp;表示图的列表数组</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList&lt;ArrayList&lt;Integer&gt;&gt;&nbsp;lists&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;ArrayList&lt;ArrayList&lt;Integer&gt;&gt;();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;s&nbsp;=&nbsp;</span><span class="number">0</span><span>,&nbsp;e&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;判断一个单词一步可以到达哪些单词</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(</span><span class="keyword">int</span><span>&nbsp;i&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;i&nbsp;&lt;&nbsp;size;&nbsp;i++)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(start.equals(dicts[i]))&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&nbsp;=&nbsp;i;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(end.equals(dicts[i]))&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e&nbsp;=&nbsp;i;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList&lt;Integer&gt;&nbsp;list&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;ArrayList&lt;Integer&gt;();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(</span><span class="keyword">int</span><span>&nbsp;j&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;j&nbsp;&lt;&nbsp;size;&nbsp;j++)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(isOneWordDiff(dicts[i],&nbsp;dicts[j]))&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list.add(j);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lists.add(list);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HashMap&lt;Integer,Integer&gt;&nbsp;dist&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;HashMap&lt;Integer,&nbsp;Integer&gt;();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Queue&lt;Integer&gt;&nbsp;queue&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;LinkedList&lt;Integer&gt;();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue.add(s);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist.put(s,&nbsp;<span class="number">1</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">while</span><span>&nbsp;(!queue.isEmpty())&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;index&nbsp;=&nbsp;queue.poll();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ArrayList&lt;Integer&gt;&nbsp;list&nbsp;=&nbsp;lists.get(index);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(</span><span class="keyword">int</span><span>&nbsp;i&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;i&nbsp;&lt;&nbsp;list.size();&nbsp;i++)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(list.get(i)&nbsp;==&nbsp;e)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;dist.get(index)&nbsp;+&nbsp;</span><span class="number">1</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(!dist.containsKey(list.get(i)))&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue.add(list.get(i));&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist.put(list.get(i),&nbsp;dist.get(index)&nbsp;+&nbsp;<span class="number">1</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span><span class="keyword">private</span><span>&nbsp;</span><span class="keyword">boolean</span><span>&nbsp;isOneWordDiff(String&nbsp;a,&nbsp;String&nbsp;b)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;diff&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(</span><span class="keyword">int</span><span>&nbsp;i&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;i&nbsp;&lt;&nbsp;a.length();&nbsp;i++)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(a.charAt(i)&nbsp;!=&nbsp;b.charAt(i))&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;diff++;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(diff&nbsp;&gt;=&nbsp;</span><span class="number">2</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">false</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;diff&nbsp;==&nbsp;</span><span class="number">1</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div><pre style="display: none;" name="code" class="java">public int ladderLength2(String start, String end, HashSet&lt;String&gt; dict) {
+		if (start == null || end == null || start.equals(end)
+				|| start.length() != end.length())
+			return 0;
+
+		if (isOneWordDiff(start, end))
+			return 2;
+
+		dict.add(start);
+		dict.add(end);
+
+		String[] dicts = (String[]) dict.toArray(new String[0]);
+
+		int size = dicts.length;
+
+　　// 表示图的列表数组
+		ArrayList&lt;ArrayList&lt;Integer&gt;&gt; lists = new ArrayList&lt;ArrayList&lt;Integer&gt;&gt;();
+
+		int s = 0, e = 0;
+		// 判断一个单词一步可以到达哪些单词
+		for (int i = 0; i &lt; size; i++) {
+			if (start.equals(dicts[i]))
+				s = i;
+			if (end.equals(dicts[i]))
+				e = i;
+
+			ArrayList&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();
+			for (int j = 0; j &lt; size; j++) {
+				if (isOneWordDiff(dicts[i], dicts[j]))
+					list.add(j);
+			}
+
+			lists.add(list);
+		}
+
+		HashMap&lt;Integer,Integer&gt; dist = new HashMap&lt;Integer, Integer&gt;();
+
+		Queue&lt;Integer&gt; queue = new LinkedList&lt;Integer&gt;();
+		queue.add(s);
+		dist.put(s, 1);
+
+		while (!queue.isEmpty()) {
+			int index = queue.poll();
+			ArrayList&lt;Integer&gt; list = lists.get(index);
+
+			for (int i = 0; i &lt; list.size(); i++) {
+				if (list.get(i) == e) {
+					return dist.get(index) + 1;
+				}
+
+				if (!dist.containsKey(list.get(i))) {
+					queue.add(list.get(i));
+					dist.put(list.get(i), dist.get(index) + 1);
+				}
+			}
+		}
+
+		return 0;
+	}
+private boolean isOneWordDiff(String a, String b) {
+		int diff = 0;
+		for (int i = 0; i &lt; a.length(); i++) {
+			if (a.charAt(i) != b.charAt(i)) {
+				diff++;
+				if (diff &gt;= 2)
+					return false;
+			}
+		}
+
+		return diff == 1;
+	}</pre>
+<p>分析一下上面代码的思路：</p>
+<p>1．首先将<span style="font-family:Times New Roman">start</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">end</span><span style="font-family:宋体">添加到词典中，并将词典转化成数组；</span></p>
+<p>2．创建一个二维数组，二维数组的每一维表示某个单词可以通过一步转化到达的单词，也即利用邻接表的方式存储图结构。在这个过程中也获得了<span style="font-family:Times New Roman">start</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">end</span><span style="font-family:宋体">代表的数字；</span></p>
+<p>3．利用构造的图进行<span style="font-family:Times New Roman">BFS</span><span style="font-family:宋体">遍历，直到遇到</span><span style="font-family:Times New Roman">end</span><span style="font-family:宋体">节点或者返回</span><span style="font-family:Times New Roman">0</span><span style="font-family:宋体">。在遍历的过程中，由于图的边长是</span><span style="font-family:Times New Roman">1</span><span style="font-family:宋体">，所以我们在遍历的时候总是得到从</span><span style="font-family:Times New Roman">start</span><span style="font-family:宋体">到某个节点的最短路径，所以我们只需要考虑尚未遍历过的顶点即可。</span></p>
+<p>上述代码是正确的，但是一直超时真是让人搞不清状况。后来，只能上网搜索别人的解答才明白其中的原因。超时的地方不在<span style="font-family:Times New Roman">BFS</span><span style="font-family:宋体">遍历，而是在我们构造图的地方。我们采用了两层遍历构造一个图，此时复杂度是</span><span style="font-family:Times New Roman">O(n</span>2)<span style="font-family:宋体">，数据量很小时可能体现不出它的劣势，但是当</span><span style="font-family:Times New Roman">n</span><span style="font-family:宋体">上千时（给定的测试集中有这样的例子），上面的方法构造图就显得太慢。</span></p>
+<p>这里我们可以不用实际构造图，而在<span style="font-family:Times New Roman">BFS</span><span style="font-family:宋体">遍
+历的时候去寻找当前单词可达的下一个单词。如果还是通过遍历所有的单词判断是否可达，则复杂度和上面一样，但实际上在上千个单词中，只有少数几个可以由当
+前单词一步到达，我们之前的比较浪费了很多时间在不可能的单词上。网上对该问题的解决无一例外都是按照下面的思路：将当前单词每一个字符替换成</span><span style="font-family:Times New Roman">a~z</span><span style="font-family:宋体">的任意一个字符，然后判断是否在词典中出现。此时的复杂度是</span><span style="font-family:Times New Roman">O(26*word_length)</span><span style="font-family:宋体">，当单词比较短时，这种方法的优势就体现出来了。按照这种思路修改后的代码如下：</span></p>
+<div class="dp-highlighter bg_java"><div class="bar"><div class="tools"><b>[java]</b> <a href="#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command('ViewSource',this);return false;">view plain</a><a href="#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command('CopyToClipboard',this);return false;">copy</a><a href="#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command('PrintSource',this);return false;">print</a><a href="#" class="About" title="?" onclick="dp.sh.Toolbar.Command('About',this);return false;">?</a><div style="position: absolute; left: 420px; top: 2897px; width: 24px; height: 13px; z-index: 99;"><embed id="ZeroClipboardMovie_2" src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" name="ZeroClipboardMovie_2" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=24&amp;height=13" wmode="transparent" height="13" width="24" align="middle"></div></div></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;ladderLength(String&nbsp;start,&nbsp;String&nbsp;end,&nbsp;HashSet&lt;String&gt;&nbsp;dict)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(start&nbsp;==&nbsp;</span><span class="keyword">null</span><span>&nbsp;||&nbsp;end&nbsp;==&nbsp;</span><span class="keyword">null</span><span>&nbsp;||&nbsp;start.equals(end)&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;start.length()&nbsp;!=&nbsp;end.length())&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(isOneWordDiff(start,&nbsp;end))&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">2</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Queue&lt;String&gt;&nbsp;queue=<span class="keyword">new</span><span>&nbsp;LinkedList&lt;String&gt;();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HashMap&lt;String,Integer&gt;&nbsp;dist=<span class="keyword">new</span><span>&nbsp;HashMap&lt;String,Integer&gt;();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue.add(start);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist.put(start,&nbsp;<span class="number">1</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">while</span><span>(!queue.isEmpty())&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;head=queue.poll();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;headDist=dist.get(head);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//从每一个位置开始替换成a~z</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>(</span><span class="keyword">int</span><span>&nbsp;i=</span><span class="number">0</span><span>;i&lt;head.length();i++)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>(</span><span class="keyword">char</span><span>&nbsp;j=</span><span class="string">'a'</span><span>;j&lt;</span><span class="string">'z'</span><span>;j++)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>(head.charAt(i)==j)&nbsp;</span><span class="keyword">continue</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;StringBuilder&nbsp;sb=<span class="keyword">new</span><span>&nbsp;StringBuilder(head);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sb.setCharAt(i,&nbsp;j);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>(sb.toString().equals(end))&nbsp;</span><span class="keyword">return</span><span>&nbsp;headDist+</span><span class="number">1</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>(dict.contains(sb.toString())&amp;&amp;!dist.containsKey(sb.toString()))&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue.add(sb.toString());&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist.put(sb.toString(),&nbsp;headDist+<span class="number">1</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>　　&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div><pre style="display: none;" name="code" class="java">public int ladderLength(String start, String end, HashSet&lt;String&gt; dict) {
+		if (start == null || end == null || start.equals(end)
+				|| start.length() != end.length())
+			return 0;
+
+		if (isOneWordDiff(start, end))
+			return 2;
+
+		Queue&lt;String&gt; queue=new LinkedList&lt;String&gt;();
+		HashMap&lt;String,Integer&gt; dist=new HashMap&lt;String,Integer&gt;();
+		
+		queue.add(start);
+		dist.put(start, 1);
+		
+		while(!queue.isEmpty())
+		{
+			String head=queue.poll();
+			
+			int headDist=dist.get(head);
+			//从每一个位置开始替换成a~z
+			for(int i=0;i&lt;head.length();i++)
+			{
+				for(char j='a';j&lt;'z';j++)
+				{
+					if(head.charAt(i)==j) continue;
+					
+					StringBuilder sb=new StringBuilder(head);
+					sb.setCharAt(i, j);
+					
+					if(sb.toString().equals(end)) return headDist+1;
+					
+					if(dict.contains(sb.toString())&amp;&amp;!dist.containsKey(sb.toString()))
+					{
+						queue.add(sb.toString());
+						dist.put(sb.toString(), headDist+1);
+					}
+				}
+			}
+		}
+		
+		return 0;
+　　	}</pre>
+<div class="Section0">
+<p class="p0" style="text-indent:21.0000pt; margin-bottom:0pt; margin-top:0pt; text-align:justify; vertical-align:">
+<span style="font-size:12pt; font-family:宋体">我们可以看出，代码更加简洁，而且效率也更高，提交上述代码就可以</span><span style="font-size:12pt; font-family:宋体">AC<span style="font-family:宋体">了。</span></span><span style="font-size:12pt; font-family:宋体"></span></p>
+<p class="p0" style="text-indent:21.0000pt; margin-bottom:0pt; margin-top:0pt"><span style="font-size:11pt; font-family:Consolas">&nbsp;</span></p>
+</div>
+<br>
+<br>
+<br>
+
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+<!-- Baidu Button END -->
+
+<!--192.168.100.35-->
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+<!-- Baidu Button END -->
+
+
+        
+</div>
+       
+
+
+
+
+   
+
+
+    
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+            <div id="side">
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/yutianzuijin" target="_blank">
+    <img src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/1_yutianzuijin.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/yutianzuijin" class="user_name" target="_blank">yutianzuijin</a></span>
+</div>
+<div class="interact">
+<a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_guanzhu'])"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=yutianzuijin','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>131197次</span></li>
+    <li>积分：<span>1757</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="%E8%A7%A3%E5%86%B3%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%8F%82%E8%80%83%E6%96%B9%E6%A1%88_files/blog4.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：1757 </div>
+        </span>  </li>
+    <li>排名：<span>第8780名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>56篇</span></li>
+    <li>转载：<span>18篇</span></li>
+    <li>译文：<span>1篇</span></li>
+    <li>评论：<span>73条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_23354839" class="panel">
+<ul class="panel_head"><span>友情链接</span></ul>
+<ul class="panel_body">
+
+<a href="http://apprentice89.com/">俊哥</a><br>
+<a href="http://www.ahathinking.com/archives/158.html">勇幸</a><br>
+<a href="http://www.searchtb.com/2010/12/random-algorithm.html?spm=0.0.0.0.kPEG6C">淘宝技术博客</a>
+
+</ul>
+</div>
+<div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/1385418" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">其他</a><span>(9)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/1607885" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">模式识别</a><span>(2)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/1625647" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据结构与算法</a><span>(18)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/1625649" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">编程语言</a><span>(16)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/1625651" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">分布式计算</a><span>(16)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/1628275" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">leetcode</a><span>(5)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/2120655" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">音乐检索</a><span>(4)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/2127987" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">python</a><span>(3)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/2170575" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(3)</span>
+            </li>
+             <li>
+                <a href="http://blog.csdn.net/yutianzuijin/article/category/2170589" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">网络</a><span>(3)</span>
+            </li>
+</ul>
+</div><div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/11477603" title="leetcode难度及面试频率">leetcode难度及面试频率</a><span>(33088)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/11499917" title="leetcode之 median of two sorted arrays">leetcode之 median of two sorted arrays</a><span>(12398)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/11618651" title="《挑战程序设计竞赛》 读后感">《挑战程序设计竞赛》 读后感</a><span>(4802)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/9455319" title="hadoop环境配置过程中可能遇到问题的解决方案">hadoop环境配置过程中可能遇到问题的解决方案</a><span>(3594)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/12887747" title="leetcode之word ladder">leetcode之word ladder</a><span>(3396)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/7988263" title="Matlab类与链表">Matlab类与链表</a><span>(3235)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/8147912" title="CUDA编程常见问题">CUDA编程常见问题</a><span>(3156)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/10823985" title="基于PCA的人脸识别步骤">基于PCA的人脸识别步骤</a><span>(2928)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/13161721" title="leetcode之 Generate Parentheses">leetcode之 Generate Parentheses</a><span>(2925)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/9141401" title="MPICH3环境配置">MPICH3环境配置</a><span>(2704)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/13161721" title="leetcode之 Generate Parentheses">leetcode之 Generate Parentheses</a><span>(11)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/11477603" title="leetcode难度及面试频率">leetcode难度及面试频率</a><span>(6)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/11618651" title="《挑战程序设计竞赛》 读后感">《挑战程序设计竞赛》 读后感</a><span>(6)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/16850031" title="leetcode之 Palindrome Partitioning I&amp;II">leetcode之 Palindrome Partitioning I&amp;II</a><span>(6)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/11499917" title="leetcode之 median of two sorted arrays">leetcode之 median of two sorted arrays</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/10300067" title="《编程之美》2.21 只考加法的面试题">《编程之美》2.21 只考加法的面试题</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/22876017" title="基数排序的性能优化">基数排序的性能优化</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/24807417" title="Java与C之间的socket通信">Java与C之间的socket通信</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/11954939" title="KMP算法详解">KMP算法详解</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/yutianzuijin/article/details/9076829" title="git使用说明">git使用说明</a><span>(3)</span>
+</li>
+</ul>
+</div>
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/24807417#comments">Java与C之间的socket通信</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/shatian1144" class="user_name">shatian1144</a>:
+@lijunqiangacm:你研究的怎么样了？可以交流一下吗？qq1320024819
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/24807417#comments">Java与C之间的socket通信</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/shatian1144" class="user_name">shatian1144</a>:
+我的也是c和java，现在c可以接收到java的数据，但是java接收不到c的，一直阻塞在那，可以给...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/11618651#comments">《挑战程序设计竞赛》 读后感</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/yutianzuijin" class="user_name">yutianzuijin</a>:
+@zy691357966:嗯，我就是一个滥竽充数的程序猿……
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/11618651#comments">《挑战程序设计竞赛》 读后感</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/zy691357966" class="user_name">zy691357966</a>:
+没说的那么夸张。。这应该只能说的上是ACM的基础吧。。只是现在的程序员太滥竽充数。。注重工程而非修炼...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/10823985#comments">基于PCA的人脸识别步骤</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/fcvsflashing" class="user_name">fcvsflashing</a>:
+有用
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/11499917#comments">leetcode之 median of two sorted arrays</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/aiyamayacsacas" class="user_name">aiyamayacsacas</a>:
+归并排序复杂度不也是log(m+n)吗？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/11499917#comments">Java与C之间的socket通信</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/reminis" class="user_name">reminis</a>:
+受教了，非常感谢！
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/40268445#comments">快速浮点开方运算</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/yutianzuijin" class="user_name">yutianzuijin</a>:
+@yuwenjie1989:有些图是用MATLAB画的，有些是截的别人的。
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/40268445#comments">快速浮点开方运算</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/yuwenjie1989" class="user_name">yuwenjie1989</a>:
+图是用啥画的啊。。
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/yutianzuijin/article/details/13161721#comments">leetcode之 Generate Parentheses</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/RunZhi1989" class="user_name">apprentice89</a>:
+赞！！想了半天没想明白。我想递归来着。
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+
+            <div class="clear">
+            </div>
+        </div>
+        
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    
+     <!--new top-->
+
+
+</body></html>
