@@ -57,6 +57,8 @@ public class LRUCache {
         
         public Node(int key) {
             this.key = key;
+            this.prev = null;
+            this.next = null;
         }
     }
     
